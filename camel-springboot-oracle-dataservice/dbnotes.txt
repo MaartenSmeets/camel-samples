@@ -1,0 +1,57 @@
+git clone https://github.com/oracle/docker-images.git
+cd docker-images/OracleDatabase/SingleInstance/dockerfiles
+Download the file LINUX.X64_193000_db_home.zip from https://www.oracle.com/database/technologies/oracle-database-software-downloads.html
+
+Create Docker image
+./buildDockerImage.sh -s -v 19.3.0
+
+Run Docker image
+
+docker run --name oracle19c \
+-p 1522:1521 -p 5500:5500 \
+-e ORACLE_SID=sid \
+-e ORACLE_PDB=pdb \
+-e ORACLE_PWD=Welcome01 \
+-v /home/maarten/dbtmp19c:/opt/oracle/oradata \
+oracle/database:19.3.0-se2
+
+Login using:
+Hostname: localhost 
+Port: 1522 
+Service: sid 
+User: system 
+Password: Welcome01
+
+Create database stuff
+
+alter session set container = pdb;
+
+-- USER SQL
+CREATE USER testuser IDENTIFIED BY Welcome01
+DEFAULT TABLESPACE "USERS"
+TEMPORARY TABLESPACE "TEMP";
+
+-- QUOTAS
+
+-- ROLES
+GRANT "DBA" TO testuser ;
+GRANT "CONNECT" TO testuser;
+GRANT "RESOURCE" TO testuser;
+
+Login using:
+Hostname: localhost 
+Port: 1522 
+Service: pdb 
+User: testuser 
+Password: Welcome01
+
+CREATE OR REPLACE PROCEDURE GET_TABLES 
+(
+  p_username IN VARCHAR2,RESULT_CLOB OUT CLOB 
+) AS
+p_query varchar2(1000);
+BEGIN
+  p_query := 'select * from all_tables where owner='''||p_username||'''';
+  select dbms_xmlgen.getxml(p_query) into RESULT_CLOB from dual;
+END GET_TABLES;
+
