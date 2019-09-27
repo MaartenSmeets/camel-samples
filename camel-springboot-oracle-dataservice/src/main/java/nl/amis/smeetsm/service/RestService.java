@@ -50,12 +50,13 @@ class RestService extends RouteBuilder {
                     System.out.println(body);
                 });
 
-        // http://localhost:8080/camel/api/in
+        // http://localhost:8081/camel/api/in
         rest("/api/").description("Test REST Service")
                 .id("api-route")
                 .get("/in")
-                .produces(MediaType.TEXT_PLAIN)
+                .produces(MediaType.APPLICATION_XML)
                 .consumes(MediaType.MEDIA_TYPE_WILDCARD)
                 .to("direct:proccall");
     }
 }
+
