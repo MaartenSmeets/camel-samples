@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rests xmlns="http://camel.apache.org/schema/spring">
+<rest path="/services" id="hellosoap">
+    <post uri="hellosoap">
+        <route id="hellosoap">
+            <process ref="SOAPXMLProcessor"/>
+            <to uri="direct:greetingxml"/>
+            <process ref="XMLSOAPProcessor"/>
+            <setHeader headerName="Content-Type">
+                <constant>application/soap+xml</constant>
+            </setHeader>
+        </route>
+    </post>
+</rest>
+</rests>
