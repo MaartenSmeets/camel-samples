@@ -11,8 +11,8 @@ import java.io.ByteArrayOutputStream;
 @Component
 public class XMLSOAPProcessor implements Processor {
 
-    private SOAPMessage XMLtoSOAP(Document doc) throws SOAPException {
-        MessageFactory myMessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+    private SOAPMessage XMLtoSOAP(Document doc,String protocol) throws SOAPException {
+        MessageFactory myMessageFactory = MessageFactory.newInstance(protocol);
         SOAPMessage soapMessage = myMessageFactory.createMessage();
         SOAPBody soapBody = soapMessage.getSOAPBody();
         SOAPBodyElement docElement = soapBody.addDocument(doc);
@@ -32,6 +32,10 @@ public class XMLSOAPProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
         Document myDoc = exchange.getIn().getBody(Document.class);
-        exchange.getIn().setBody(soapMessageToString(XMLtoSOAP(myDoc)));
+        String protocol= (String) exchange.getIn().getHeader("X-MS-SOAPPROTOCOL");
+        if (protocol == null) {
+            protocol = SOAPConstants.SOAP_1_1_PROTOCOL;
+        }
+        exchange.getIn().setBody(soapMessageToString(XMLtoSOAP(myDoc,protocol)));
     }
 }
