@@ -5,9 +5,9 @@
             <route id="hellosoap-route">
                 <choice id="soapAction">
                     <when>
-                        <simple>${header.SOAPAction} regex '^.*doGreeting$'</simple>
+                        <simple>${header.SOAPAction} regex '^.*\"?sayHello\"?$'</simple>
                         <process ref="SOAPXMLProcessor"/>
-                        <to uri="direct:greetingxml"/>
+                        <to uri="direct:testDS0"/>
                         <process ref="XMLSOAPProcessor"/>
                         <setHeader headerName="Content-Type">
                             <constant>application/soap+xml</constant>
