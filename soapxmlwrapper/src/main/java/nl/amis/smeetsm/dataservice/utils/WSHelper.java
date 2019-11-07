@@ -14,6 +14,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 
 public class WSHelper {
     public static String createSOAPFaultServerError(final Exception cause, Exchange exchange) throws SOAPException, IOException {
@@ -47,7 +48,7 @@ public class WSHelper {
         return result;
     }
 
-    private static String soapMessage2String(final SOAPMessage message) throws SOAPException, IOException {
+    public static String soapMessage2String(final SOAPMessage message) throws SOAPException, IOException {
         String result = null;
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         message.writeTo(outStream);
@@ -73,6 +74,26 @@ public class WSHelper {
             e.printStackTrace();
         }
         return ret;
+    }
+
+    public static Document newDocumentFromString(String in) {
+        //Parser that produces DOM object trees from XML content
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+        //API to obtain DOM Document instance
+        DocumentBuilder builder = null;
+        try {
+            factory.setNamespaceAware(true);
+            //Create DocumentBuilder with default configuration
+            builder = factory.newDocumentBuilder();
+
+            //Parse the content to Document object
+            Document doc = builder.parse(new InputSource(new StringReader(in)));
+            return doc;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static String docToString(Document doc) {
@@ -110,10 +131,13 @@ public class WSHelper {
     }
 
     public static SOAPMessage XMLtoSOAP(Document doc, String protocol) throws SOAPException {
+        System.out.println("Called with " + protocol + " Message: " + docToString(doc));
         MessageFactory myMessageFactory = MessageFactory.newInstance(protocol);
         SOAPMessage soapMessage = myMessageFactory.createMessage();
         SOAPBody soapBody = soapMessage.getSOAPBody();
+
         SOAPBodyElement docElement = soapBody.addDocument(doc);
+
         return soapMessage;
     }
 
@@ -132,6 +156,37 @@ public class WSHelper {
             msg = MessageFactory.newInstance(protocol).createMessage();
         }
         return msg;
+    }
+
+    public static String inputStreamToString(InputStream is) throws IOException {
+        InputStreamReader isReader = new InputStreamReader(is);
+        //Creating a BufferedReader object
+        BufferedReader reader = new BufferedReader(isReader);
+        StringBuffer sb = new StringBuffer();
+        String str;
+        while ((str = reader.readLine()) != null) {
+            sb.append(str);
+        }
+        return sb.toString();
+    }
+
+    public static String getOperationFromSOAPHdr(SOAPHeader soapHeader) {
+        @SuppressWarnings("unchecked")
+        Iterator<SOAPHeaderElement> it = soapHeader.examineAllHeaderElements();
+
+        SOAPHeaderElement opHdr = null;
+
+        while (it.hasNext()) {
+            opHdr = it.next();
+
+            if ("operation".equals(opHdr.getLocalName())) {
+                System.out.println("Found operation in SOAP header");
+
+                return opHdr.getTextContent();
+            }
+        }
+
+        return null;
     }
 
 }

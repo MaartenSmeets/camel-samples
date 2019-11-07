@@ -1,42 +1,76 @@
 package nl.amis.smeetsm.dataservice.utils;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.util.List;
-import java.util.Map;
+
+import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_SINGLETON;
 
 @Component
 @ConfigurationProperties(prefix = "app")
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:datasources.properties")
 public class DSHelper {
+    private List<MyDS> datasource;
 
-    private List<DBProcCall> dbproccall;
-
-    public List<DBProcCall> getDbproccalls() {
-        return dbproccall;
+    public List<MyDS> getDatasource() {
+        return datasource;
     }
 
-    public void setDbproccall(List<DBProcCall> dbproccall) {
-        this.dbproccall = dbproccall;
+    public void setDatasource(List<MyDS> datasource) {
+        this.datasource = datasource;
     }
 
-    public static class DBProcCall {
-        private String identifier;
+    @Override
+    public String toString() {
+        return "DSHelper{" +
+                "myDS=" + datasource +
+                '}';
+    }
+
+    public static class MyDS implements ApplicationContextAware {
+        private String ref;
         private String url;
-        private String package_name;
-        private Map<String, String> datasource;
+        private String driverClassName;
+        private String username;
+        private String password;
+        private ApplicationContext applicationContext;
 
-        public String getIdentifier() {
-            return identifier;
+        public DataSourceProperties getDatasourceProperties() {
+            DataSourceProperties dsProps = new DataSourceProperties();
+            dsProps.setDriverClassName(driverClassName);
+            dsProps.setUsername(username);
+            dsProps.setPassword(password);
+            dsProps.setUrl(url);
+            return dsProps;
         }
 
-        public void setIdentifier(String identifier) {
-            this.identifier = identifier;
+        @Override
+        public String toString() {
+            return "MyDS{" +
+                    "ref='" + ref + '\'' +
+                    ", url='" + url + '\'' +
+                    ", driverClassName='" + driverClassName + '\'' +
+                    ", username='" + username + '\'' +
+                    ", password='" + password + '\'' +
+                    '}';
+        }
+
+        public String getRef() {
+            return ref;
+        }
+
+        public void setRef(String ref) {
+            this.ref = ref;
         }
 
         public String getUrl() {
@@ -47,35 +81,49 @@ public class DSHelper {
             this.url = url;
         }
 
-        public String getPackage_name() {
-            return package_name;
+        public String getDriverClassName() {
+            return driverClassName;
         }
 
-        public void setPackage_name(String package_name) {
-            this.package_name = package_name;
+        public void setDriverClassName(String driverClassName) {
+            this.driverClassName = driverClassName;
         }
 
-        public DataSourceProperties getDatasourceProperties() {
-            DataSourceProperties dsProps = new DataSourceProperties();
-            dsProps.setDriverClassName(datasource.get("driver-class-name"));
-            dsProps.setUsername(datasource.get("username"));
-            dsProps.setPassword(datasource.get("password"));
-            dsProps.setUrl(datasource.get("url"));
-            return dsProps;
+        public String getUsername() {
+            return username;
         }
 
-        public void setDatasource(Map<String, String> datasource) {
-            this.datasource = datasource;
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
         }
 
         @Override
-        public String toString() {
-            return "DBProcCall{" +
-                    "identifier='" + identifier + '\'' +
-                    ", url='" + url + '\'' +
-                    ", package_name='" + package_name + '\'' +
-                    ", datasource=" + datasource +
-                    '}';
+        public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+            this.applicationContext = applicationContext;
+        }
+
+        public void registerBean() {
+            AutowireCapableBeanFactory beanFactory  = applicationContext.getAutowireCapableBeanFactory();
+            BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
+            if (!registry.containsBeanDefinition(ref)) {
+                GenericBeanDefinition myBeanDefinition = new GenericBeanDefinition();
+                myBeanDefinition.setBeanClass(HikariDataSource.class);
+                myBeanDefinition.setScope(SCOPE_SINGLETON);
+                registry.registerBeanDefinition(ref, myBeanDefinition);
+                HikariDataSource myDS = (HikariDataSource) applicationContext.getBean(ref);
+                myDS.setDriverClassName(this.getDatasourceProperties().getDriverClassName());
+                myDS.setUsername(username);
+                myDS.setPassword(password);
+                myDS.setJdbcUrl(url);
+            }
         }
     }
 }

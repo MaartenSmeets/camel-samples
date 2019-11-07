@@ -6,18 +6,28 @@ import org.apache.camel.Processor;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
-import javax.xml.soap.*;
+import javax.xml.soap.SOAPConstants;
 
 @Component
 public class XMLSOAPProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        Document myDoc = exchange.getIn().getBody(Document.class);
-        String protocol= (String) exchange.getIn().getHeader("X-MS-SOAPPROTOCOL");
+        Object doc = exchange.getIn().getBody();
+        System.out.println(doc.getClass().getName());
+        String protocol = (String) exchange.getIn().getHeader("X-MS-SOAPPROTOCOL");
         if (protocol == null) {
             protocol = SOAPConstants.SOAP_1_1_PROTOCOL;
         }
-        exchange.getIn().setBody(WSHelper.soapMessageToString(WSHelper.XMLtoSOAP(myDoc,protocol)));
+        if (doc instanceof Document) {
+            Document myDoc = (Document) doc;
+            exchange.getIn().setBody(WSHelper.XMLtoSOAP(myDoc, protocol));
+        } else if (doc instanceof String) {
+            Document myDoc = WSHelper.newDocumentFromString((String) doc);
+            System.out.println(doc+" : "+protocol);
+            exchange.getIn().setBody(WSHelper.XMLtoSOAP(myDoc, protocol));
+        } else {
+            throw new UnsupportedOperationException("Input is of class: " + doc.getClass().getName() + ". Only String and Document is supported!");
+        }
     }
 }

@@ -1,32 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rests xmlns="http://camel.apache.org/schema/spring">
-    <rest path="/services" id="hello-soapservice">
-        <post uri="hellosoap">
-            <route id="hellosoap-route">
-                <choice id="soapAction">
-                    <when>
-                        <simple>${header.SOAPAction} regex '^.*\"?sayHello\"?$'</simple>
-                        <process ref="SOAPXMLProcessor"/>
-                        <to uri="direct:testDS0"/>
-                        <process ref="XMLSOAPProcessor"/>
-                        <setHeader headerName="Content-Type">
-                            <constant>application/soap+xml</constant>
-                        </setHeader>
-                    </when>
-                    <otherwise>
-                        <throwException exceptionType="java.lang.UnsupportedOperationException"
-                                        message="SOAP action is not supported"/>
-                    </otherwise>
-                </choice>
-                <onException>
-                    <exception>java.lang.Exception</exception>
-                    <handled>
-                        <constant>true</constant>
-                    </handled>
-                    <bean beanType="nl.amis.smeetsm.dataservice.utils.WSHelper" method="createSOAPFaultServerError"/>
-                    <log message="Exception!! ${exception.message}"/>
-                </onException>
-            </route>
-        </post>
-    </rest>
 </rests>
