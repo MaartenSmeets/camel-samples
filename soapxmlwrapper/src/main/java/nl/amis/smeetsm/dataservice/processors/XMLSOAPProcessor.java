@@ -14,7 +14,6 @@ public class XMLSOAPProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
         Object doc = exchange.getIn().getBody();
-        System.out.println(doc.getClass().getName());
         String protocol = (String) exchange.getIn().getHeader("X-MS-SOAPPROTOCOL");
         if (protocol == null) {
             protocol = SOAPConstants.SOAP_1_1_PROTOCOL;
@@ -24,7 +23,6 @@ public class XMLSOAPProcessor implements Processor {
             exchange.getIn().setBody(WSHelper.XMLtoSOAP(myDoc, protocol));
         } else if (doc instanceof String) {
             Document myDoc = WSHelper.newDocumentFromString((String) doc);
-            System.out.println(doc+" : "+protocol);
             exchange.getIn().setBody(WSHelper.XMLtoSOAP(myDoc, protocol));
         } else {
             throw new UnsupportedOperationException("Input is of class: " + doc.getClass().getName() + ". Only String and Document is supported!");

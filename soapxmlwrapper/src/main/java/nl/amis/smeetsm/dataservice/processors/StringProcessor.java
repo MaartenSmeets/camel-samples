@@ -9,7 +9,7 @@ import org.w3c.dom.Document;
 import javax.xml.soap.SOAPMessage;
 import java.io.InputStream;
 
-public class StringProcessor  implements Processor {
+public class StringProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
         Object input = exchange.getIn().getBody();
@@ -21,10 +21,10 @@ public class StringProcessor  implements Processor {
             CLOB body = (CLOB) input;
             InputStream in = body.getAsciiStream();
             exchange.getIn().setBody(WSHelper.inputStreamToString(in));
-        }  else if (input instanceof String) {
-            ; //we're good...
+        } else if (input instanceof String) {
+            //we're good...
         } else {
-            throw new UnsupportedOperationException("Input is of class: "+input.getClass().getName()+". Only SOAPMessage, Document, CLOB or String are supported");
+            throw new UnsupportedOperationException("Input is of class: " + input.getClass().getName() + ". Only SOAPMessage, Document, CLOB or String are supported");
         }
     }
 }

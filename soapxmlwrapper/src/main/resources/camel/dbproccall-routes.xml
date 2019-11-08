@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns="http://camel.apache.org/schema/spring">
+    <route id="app01_route">
+        <from uri="direct:app01"/>
+        <choice>
+            <when>
+                <xpath>$SOAPAction = '"sayHello"'</xpath>
+                <to uri="direct:dbproccall01"/>
+            </when>
+            <when>
+                <xpath>//firstName[text()="Maarten"]</xpath>
+                <to uri="direct:dbproccall01"/>
+            </when>
+            <otherwise>
+                <setHeader name="Exchange.HTTP_RESPONSE_CODE">
+                    <constant>404</constant>
+                </setHeader>
+                <setBody>
+                    <constant/>
+                </setBody>
+                <throwException exceptionType="java.lang.UnsupportedOperationException"
+                                message="SOAPOperation not supported"/>
+            </otherwise>
+        </choice>
+        <onException>
+            <exception>java.lang.Exception</exception>
+            <handled>
+                <constant>true</constant>
+            </handled>
+            <bean beanType="nl.amis.smeetsm.dataservice.utils.WSHelper" method="createSOAPFaultServerError"/>
+        </onException>
+    </route>
+    <route id="app02_route">
+        <from uri="direct:app02"/>
+        <to uri="direct:dbproccall02"/>
+    </route>
+</routes>

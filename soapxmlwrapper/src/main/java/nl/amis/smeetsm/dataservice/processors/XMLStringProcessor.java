@@ -5,7 +5,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.w3c.dom.Document;
 
-public class XMLStringProcessor  implements Processor {
+public class XMLStringProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
         Object doc = exchange.getIn().getBody();

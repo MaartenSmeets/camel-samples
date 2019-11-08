@@ -18,7 +18,7 @@ import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_SING
 
 @Component
 @ConfigurationProperties(prefix = "app")
-@PropertySource("classpath:datasources.properties")
+@PropertySource("classpath:dbproccall_datasource.properties")
 public class DSHelper {
     private List<MyDS> datasource;
 

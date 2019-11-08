@@ -17,7 +17,6 @@ public class SOAPXMLProcessor implements Processor {
             throw new UnsupportedOperationException("Input is of class: " + doc.getClass().getName() + ". Only SOAPMesage is supported!");
         } else {
             SOAPMessage myMsg = (SOAPMessage) doc;
-
             exchange.getIn().setBody(WSHelper.SOAPtoXML(myMsg));
         }
     }

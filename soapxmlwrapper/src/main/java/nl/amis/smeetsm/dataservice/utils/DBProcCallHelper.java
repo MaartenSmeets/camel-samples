@@ -8,8 +8,9 @@ import java.util.List;
 
 @Component
 @ConfigurationProperties(prefix = "app")
-@PropertySource("classpath:dbproccall.properties")
+@PropertySource("classpath:dbproccall_procedure.properties")
 public class DBProcCallHelper {
+
     private List<DBProcCall> dbproccall;
 
     public List<DBProcCall> getDbproccall() {
@@ -28,35 +29,10 @@ public class DBProcCallHelper {
     }
 
     public static class DBProcCall {
-        private String identifier;
-        private String url;
-        private String soapoperation;
+        private String id;
+        private String uri;
         private String procedure_name;
         private String datasource_ref;
-
-        public String getIdentifier() {
-            return identifier;
-        }
-
-        public void setIdentifier(String identifier) {
-            this.identifier = identifier;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
-        public String getSoapoperation() {
-            return soapoperation;
-        }
-
-        public void setSoapoperation(String soapoperation) {
-            this.soapoperation = soapoperation;
-        }
 
         public String getProcedure_name() {
             return procedure_name;
@@ -74,15 +50,31 @@ public class DBProcCallHelper {
             this.datasource_ref = datasource_ref;
         }
 
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getUri() {
+            return uri;
+        }
+
+        public void setUri(String uri) {
+            this.uri = uri;
+        }
+
         @Override
         public String toString() {
             return "DBProcCall{" +
-                    "identifier='" + identifier + '\'' +
-                    ", url='" + url + '\'' +
-                    ", soapoperation='" + soapoperation + '\'' +
+                    "id='" + id + '\'' +
+                    ", uri='" + uri + '\'' +
                     ", procedure_name='" + procedure_name + '\'' +
                     ", datasource_ref='" + datasource_ref + '\'' +
                     '}';
         }
     }
+
 }

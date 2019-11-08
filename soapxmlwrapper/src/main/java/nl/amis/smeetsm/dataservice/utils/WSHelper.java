@@ -131,7 +131,6 @@ public class WSHelper {
     }
 
     public static SOAPMessage XMLtoSOAP(Document doc, String protocol) throws SOAPException {
-        System.out.println("Called with " + protocol + " Message: " + docToString(doc));
         MessageFactory myMessageFactory = MessageFactory.newInstance(protocol);
         SOAPMessage soapMessage = myMessageFactory.createMessage();
         SOAPBody soapBody = soapMessage.getSOAPBody();
