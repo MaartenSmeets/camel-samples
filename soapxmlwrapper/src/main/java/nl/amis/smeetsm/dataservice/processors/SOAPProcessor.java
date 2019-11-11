@@ -4,8 +4,6 @@ import nl.amis.smeetsm.dataservice.utils.WSHelper;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.converter.stream.InputStreamCache;
-//import org.apache.camel.support.MessageHelper;
-import org.apache.camel.util.MessageHelper;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -34,7 +32,7 @@ public class SOAPProcessor implements Processor {
         } else {
             throw new UnsupportedOperationException("SOAP Envelop namespace " + envelopNS + " did not equal the SOAP 1.1 namespace: " + SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE + " or the SOAP 1.2 namespace: " + SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE);
         }
-        MessageHelper.resetStreamCache(exchange.getIn());
+        is.reset();
         SOAPMessage request = WSHelper.initSOAPMessage(is, protocol);
         exchange.getIn().setHeader("X-MS-SOAPPROTOCOL",protocol);
         if (exchange.getIn().getHeader("SOAPAction") == null) {
