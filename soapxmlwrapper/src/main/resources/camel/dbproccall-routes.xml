@@ -12,7 +12,7 @@
                 <to uri="direct:dbproccall01"/>
             </when>
             <otherwise>
-                <setHeader name="Exchange.HTTP_RESPONSE_CODE">
+                <setHeader headerName="Exchange.HTTP_RESPONSE_CODE">
                     <constant>404</constant>
                 </setHeader>
                 <setBody>
