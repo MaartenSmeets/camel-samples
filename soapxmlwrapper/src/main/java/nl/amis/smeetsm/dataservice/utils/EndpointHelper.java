@@ -68,9 +68,18 @@ public class EndpointHelper {
         }
 
         public static class EndpointDef {
-            private String name;
+			private String port;
+        	private String name;
             private String url;
             private String to_route;
+
+			public String getPort() {
+				return port;
+			}
+
+			public void setPort(String port) {
+				this.port = port;
+			}
 
             public String getName() {
                 return name;
@@ -101,6 +110,7 @@ public class EndpointHelper {
                 return "EndpointDef{" +
                         "name='" + name + '\'' +
                         ", url='" + url + '\'' +
+                        ", port='" + port + '\'' +
                         ", to_route='" + to_route + '\'' +
                         '}';
             }
