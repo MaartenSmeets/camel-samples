@@ -6,6 +6,7 @@ import nl.amis.smeetsm.dataservice.utils.DSHelper;
 import nl.amis.smeetsm.dataservice.utils.EndpointHelper;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,9 @@ public class DBProcCallRoutes extends RouteBuilder {
     DSHelper dsHelper;
     @Autowired
     private ApplicationContext ctx;
+
+    @Value("${server.port}")
+    int serverPort;
 
     @Override
     public void configure() throws Exception {
