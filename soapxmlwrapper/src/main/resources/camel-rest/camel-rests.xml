@@ -1,8 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rests xmlns="http://camel.apache.org/schema/spring">
-    <rest id="googleForwarder" path="googleforwarder">
-        <get id="googleforwarder_route">
-            <to uri="https://www.google.com?bridgeEndpoint=true"></to>
-        </get>
-    </rest>
 </rests>
