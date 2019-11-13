@@ -3,7 +3,6 @@ package nl.amis.smeetsm.dataservice.processors;
 import nl.amis.smeetsm.dataservice.utils.WSHelper;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.apache.camel.converter.stream.InputStreamCache;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -11,16 +10,18 @@ import org.w3c.dom.Element;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 
+import java.io.InputStream;
+
 @Component
 public class SOAPProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
         Object input = exchange.getIn().getBody();
-        if (!(input instanceof InputStreamCache)) {
-            throw new UnsupportedOperationException("Input of class is: "+input.getClass().getName()+". Only InputStreamCache is supported by this processor");
+        if (!(input instanceof InputStream)) {
+            throw new UnsupportedOperationException("Input of class is: "+input.getClass().getName()+". Only InputStream is supported by this processor");
         }
-        InputStreamCache is = (InputStreamCache) input;
+        InputStream is = (InputStream) input;
         Document doc = WSHelper.newDocumentFromInputStream(is);
         Element root = doc.getDocumentElement();
         String envelopNS = root.getNamespaceURI();
