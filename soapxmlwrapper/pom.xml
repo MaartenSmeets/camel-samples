@@ -66,18 +66,7 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jetty</artifactId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -90,7 +79,7 @@
         <!-- For exposing endpoints at different ports -->
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-jetty-starter</artifactId>
+            <artifactId>camel-netty-http-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
@@ -128,6 +117,5 @@
             <artifactId>h2</artifactId>
             <version>1.4.197</version>
         </dependency>
-
     </dependencies>
 </project>
