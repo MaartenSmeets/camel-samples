@@ -37,6 +37,11 @@ public class DBProcCallRoutes extends RouteBuilder {
         for (EndpointHelper.App app : endpointHelper.getApp()) {
             //Process for each application the defined endpoints
             for (EndpointHelper.App.EndpointDef endpointDef : app.getEndpoint()) {
+                String port = endpointDef.getPort();
+                if (port == null) {
+					port=(new Integer(serverPort)).toString();
+				}
+                /*
                 rest(app.getBase_path() + endpointDef.getUrl()).post().route().id(app.getName() + "_" + endpointDef.getName() + "_route")
                         .process(new SOAPProcessor())
                         .process(new SOAPXMLProcessor())
@@ -44,6 +49,14 @@ public class DBProcCallRoutes extends RouteBuilder {
                         .to(endpointDef.getTo_route())
                         .process(new XMLSOAPProcessor())
                         .process(new StringProcessor());
+                 */
+                 from("netty-http:http://0.0.0.0:"+port+app.getBase_path() + endpointDef.getUrl()).id(app.getName() + "_" + endpointDef.getName() + "_route")
+				        .process(new SOAPProcessor())
+				        .process(new SOAPXMLProcessor())
+				        .process(new XMLStringProcessor())
+				        .to(endpointDef.getTo_route())
+				        .process(new XMLSOAPProcessor())
+				        .process(new StringProcessor());
             }
         }
 
