@@ -33,7 +33,7 @@ public class WSHelper {
         SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
         SOAPBody body = message.getSOAPBody();
         SOAPFault fault = body.addFault();
-        fault.setFaultCode("Server");
+        fault.setFaultCode(body.getElementName().getPrefix()+":"+"Server");
         fault.setFaultString("Unexpected server error.");
         Detail detail = fault.addDetail();
         Name entryName = envelope.createName("message");

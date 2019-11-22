@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <routes xmlns="http://camel.apache.org/schema/spring">
-    <route id="app01_route">
+    <route id="app03_route">
         <from uri="netty-http:http://0.0.0.0:8085/googleforwarder"/>
         <to uri="https://www.google.com?bridgeEndpoint=true"/>
     </route>

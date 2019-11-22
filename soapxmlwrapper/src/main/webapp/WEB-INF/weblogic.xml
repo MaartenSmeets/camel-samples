@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<weblogic-web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://xmlns.oracle.com/weblogic/weblogic-web-app http://xmlns.oracle.com/weblogic/weblogic-web-app/1.5/weblogic-web-app.xsd"
+                  xmlns="http://xmlns.oracle.com/weblogic/weblogic-web-app">
+    <context-root>/demo-weblogic</context-root>
+    <weblogic-version>12.2.1.4.0</weblogic-version>
+    <container-descriptor>
+        <prefer-web-inf-classes>false</prefer-web-inf-classes>
+        <prefer-application-packages>
+            <package-name>org.slf4j.*</package-name>
+            <package-name>org.springframework.*</package-name>
+            <package-name>com.sun.xml.ws.*</package-name>
+            <!--<package-name>com.ctc.wstx.*</package-name>
+            <package-name>org.codehaus.stax2.*</package-name>
+            <package-name>com.google.common.*</package-name>
+            <package-name>org.bouncycastle.*</package-name>-->
+        </prefer-application-packages>
+    </container-descriptor>
+</weblogic-web-app>
