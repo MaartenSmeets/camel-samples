@@ -26,7 +26,7 @@
 
 	<properties>
 		<camel.version>3.0.0-M4</camel.version>
-		<spring-boot-starter.version>2.1.7.RELEASE</spring-boot-starter.version>
+		<spring-boot-starter.version>2.5.12</spring-boot-starter.version>
 	</properties>
 
 	<dependencies>
